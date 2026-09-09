@@ -1,0 +1,235 @@
+calibration_set:
+  _templates:
+    - role: system
+      prompt: ""
+      completion: ""
+
+  # =====================================================
+  # ROLEPLAY-FOCUSED CALIBRATION DATASET
+  # Optimized for character roleplay and persona-based interaction
+  # =====================================================
+  
+  max_seq_length: 2048
+  shuffle: true
+  seed: 42
+
+  # =====================================================
+  # Category Summary (Total: 512 samples)
+  # =====================================================
+  # Roleplay / Character Cards (165 samples - 32%)  [PRIMARY]
+  # Dialogue & Character Voice (102 samples - 20%)
+  # World-building & Scenarios (77 samples - 15%)
+  # Narrative Fiction Support (51 samples - 10%)
+  # Genre-specific Scenarios (41 samples - 8%)
+  # General Conversation (26 samples - 5%)
+  # Adventure / Interactive (24 samples - 5%)
+  # General Capability Preservation (18 samples - 3.5%)
+  # Multilingual (8 samples - 1.5%)
+  # =====================================================
+
+  datasets:
+
+    # ================================================
+    # Roleplay / Character Cards — 165 samples (32%)
+    # PRIMARY FOCUS: Character-based roleplay, persona interaction
+    # High-quality synthetic RP data from Claude/GPT models
+    # ================================================
+    
+    # Gryphe Sonnet 3.5 Character Card Roleplay - Premium quality
+    - dataset: Gryphe/Sonnet3.5-Charcard-Roleplay
+      split: train
+      columns: [conversation]
+      formatter: sharegpt
+      num_samples: 60
+
+    # Anthracite Stheno - High quality filtered RP
+    - dataset: anthracite-org/stheno-filtered-v1.1
+      split: train
+      columns: [conversations]
+      formatter: sharegpt
+      num_samples: 50
+
+    # Anthracite Kalo Opus - Claude-quality RP interactions
+    - dataset: anthracite-org/kalo-opus-instruct-22k-no-refusal
+      split: train
+      columns: [conversations]
+      formatter: sharegpt
+      num_samples: 35
+
+    # PIPPA - Community-driven roleplay (1M+ utterances)
+    - dataset: PygmalionAI/PIPPA
+      split: train
+      columns: [bot_name, conversation]
+      formatter: sharegpt
+      num_samples: 20
+
+
+    # ================================================
+    # Dialogue & Character Voice — 102 samples (20%)
+    # Natural dialogue, character speech patterns, multi-turn
+    # ================================================
+    
+    # Cornell Movie Dialogs - Authentic character voices
+    - dataset: cornell-movie-dialog/cornell_movie_dialog
+      split: train
+      columns: [line_text, character]
+      formatter: chat_completion
+      num_samples: 40
+
+    # Daily Dialog - Natural conversation patterns
+    - dataset: ConvLab/dailydialog
+      split: train
+      columns: [dialogues]
+      formatter: chat_completion
+      num_samples: 32
+
+    # Persona Chat - Persona-conditioned dialogue
+    - dataset: awsaf49/persona-chat
+      split: train
+      columns: [persona, conversation]
+      formatter: chat_completion
+      num_samples: 30
+
+
+    # ================================================
+    # World-building & Scenarios — 77 samples (15%)
+    # Setting creation, atmosphere, scene-setting for RP
+    # ================================================
+    
+    # Claude writing - Descriptive prose quality
+    - dataset: anthracite-org/nopm_claude_writing_fixed
+      split: train
+      columns: [conversations]
+      formatter: sharegpt
+      num_samples: 35
+
+    # Prosemaxx Adventure - Adventure scenarios
+    - dataset: PocketDoc/Dans-Prosemaxx-Adventure
+      split: train
+      columns: [conversations]
+      formatter: sharegpt
+      num_samples: 25
+
+    # Opus Writing Prompts - Scene/scenario setup
+    - dataset: Gryphe/Opus-WritingPrompts
+      split: train
+      columns: [conversations]
+      formatter: sharegpt
+      num_samples: 17
+
+
+    # ================================================
+    # Narrative Fiction Support — 51 samples (10%)
+    # Supporting story elements for RP context
+    # ================================================
+    
+    # High-quality fiction for narrative context
+    - dataset: sam-paech/gutenberg3-generalfiction-scifi-fantasy-romance-adventure-dpo
+      split: train
+      columns: [chosen]
+      formatter: chat_completion
+      num_samples: 30
+
+    # Writing prompts for scenario inspiration
+    - dataset: euclaise/writingprompts
+      split: train
+      columns: [prompt, story]
+      formatter: prompt_answer
+      num_samples: 21
+
+
+    # ================================================
+    # Genre-specific Scenarios — 41 samples (8%)
+    # Fantasy, Sci-Fi, Horror, Romance, Mystery scenarios
+    # ================================================
+    
+    # GPT-4o Writing Prompts - Diverse genre coverage
+    - dataset: Gryphe/ChatGPT-4o-Writing-Prompts
+      split: train
+      columns: [prompt, story]
+      formatter: prompt_answer
+      num_samples: 25
+
+    # Writing Prompt Augmented - Genre variety
+    - dataset: fabraz/writingPromptAug
+      split: train
+      columns: [prompt, story]
+      formatter: prompt_answer
+      num_samples: 16
+
+
+    # ================================================
+    # General Conversation — 26 samples (5%)
+    # Baseline conversational ability preservation
+    # ================================================
+    
+    # Ultrachat - High quality general conversation
+    - dataset: HuggingFaceH4/ultrachat_200k
+      split: train_sft
+      columns: [messages]
+      formatter: chat_completion
+      num_samples: 16
+
+    # Dolly - Instruction following baseline
+    - dataset: databricks/databricks-dolly-15k
+      split: train
+      columns: [instruction, response]
+      formatter: prompt_answer
+      num_samples: 10
+
+
+    # ================================================
+    # Adventure / Interactive Fiction — 24 samples (5%)
+    # Interactive storytelling and choice-driven narratives
+    # ================================================
+    
+    # Kinomaxx VanillaBackrooms - Interactive adventure
+    - dataset: PocketDoc/Dans-Kinomaxx-VanillaBackrooms
+      split: train
+      columns: [conversations]
+      formatter: sharegpt
+      num_samples: 14
+
+    # Adventure roleplay scenarios
+    - dataset: zerofata/Roleplay-Anime-Characters
+      split: train
+      columns: [messages]
+      formatter: chat_completion
+      num_samples: 10
+
+
+    # ================================================
+    # General Capability Preservation — 18 samples (3.5%)
+    # Math, reasoning - prevents capability loss
+    # ================================================
+    
+    - dataset: nvidia/HelpSteer
+      split: train
+      columns: [prompt, response]
+      formatter: prompt_answer
+      num_samples: 8
+
+    - dataset: garage-bAInd/Open-Platypus
+      split: train
+      columns: [instruction, output]
+      formatter: prompt_answer
+      num_samples: 6
+
+    - dataset: nvidia/OpenMathInstruct-2
+      split: train
+      columns: [problem, generated_solution]
+      formatter: prompt_answer
+      num_samples: 4
+      streaming: true
+
+
+    # ================================================
+    # Multilingual — 8 samples (1.5%)
+    # Language breadth for international RP
+    # ================================================
+    
+    - dataset: HuggingFaceH4/Multilingual-Thinking
+      split: train
+      columns: [user]
+      formatter: raw_text
+      num_samples: 8

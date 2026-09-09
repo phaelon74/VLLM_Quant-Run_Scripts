@@ -1,0 +1,35 @@
+# FSDP2 config for NVFP4 QAD multi-GPU training
+# QAD requires fsdp_cpu_ram_efficient_loading: false (distillation does not work with memory efficient loading)
+#
+# Usage:
+#   accelerate launch --config_file Main/accelerate_config/fsdp2.yaml Main/Main-NVFP4-QAD.py \
+#       --model_path /path/to/model \
+#       --output_path /path/to/output \
+#       --recipe_yaml Recipes/Datasets/StoryWriting_Default.yaml
+#
+# Override decoder layer via: --fsdp_transformer_layer_cls_to_wrap LlamaDecoderLayer
+# (Script auto-detects LlamaDecoderLayer, MistralDecoderLayer, etc. if omitted)
+
+compute_environment: LOCAL_MACHINE
+debug: false
+distributed_type: FSDP
+downcast_bf16: 'no'
+enable_cpu_affinity: false
+fsdp_config:
+  fsdp_version: 2
+  fsdp_auto_wrap_policy: TRANSFORMER_BASED_WRAP
+  fsdp_transformer_layer_cls_to_wrap: LlamaDecoderLayer
+  fsdp_reshard_after_forward: true
+  fsdp_cpu_ram_efficient_loading: false
+  fsdp_offload_params: false
+  fsdp_sync_module_states: true
+machine_rank: 0
+main_training_function: main
+num_machines: 1
+num_processes: 2
+rdzv_backend: static
+same_network: true
+tpu_env: []
+tpu_use_cluster: false
+tpu_use_sudo: false
+use_cpu: false

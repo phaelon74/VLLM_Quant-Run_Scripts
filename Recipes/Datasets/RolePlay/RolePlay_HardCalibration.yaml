@@ -1,0 +1,220 @@
+calibration_set:
+  _templates:
+    - role: system
+      prompt: ""
+      completion: ""
+
+  # =====================================================
+  # ROLEPLAY HARD CALIBRATION
+  # Challenging roleplay datasets for robust calibration
+  # =====================================================
+  
+  max_seq_length: 8192
+  shuffle: true
+  seed: 42
+
+  # =====================================================
+  # Category Summary (Total: 512 samples)
+  # =====================================================
+  # Roleplay / Character Cards (165 samples - 32%)  [PRIMARY]
+  # Dialogue & Character Voice (102 samples - 20%)
+  # World-building & Scenarios (77 samples - 15%)
+  # Narrative Fiction Support (51 samples - 10%)
+  # Genre-specific Scenarios (41 samples - 8%)
+  # General Conversation (26 samples - 5%)
+  # Adventure / Interactive (24 samples - 5%)
+  # General Capability Preservation (18 samples - 3.5%)
+  # Multilingual (8 samples - 1.5%)
+  # =====================================================
+
+  datasets:
+
+    # ================================================
+    # Roleplay / Character Cards — 165 samples (32%)
+    # PRIMARY: High-quality challenging RP scenarios
+    # ================================================
+    
+    # Premium Claude-quality character RP
+    - dataset: Gryphe/Sonnet3.5-Charcard-Roleplay
+      split: train
+      columns: [conversation]
+      formatter: sharegpt
+      num_samples: 60
+
+    # Complex filtered RP interactions
+    - dataset: anthracite-org/stheno-filtered-v1.1
+      split: train
+      columns: [conversations]
+      formatter: sharegpt
+      num_samples: 50
+
+    # Claude Opus quality - challenging scenarios
+    - dataset: anthracite-org/kalo-opus-instruct-22k-no-refusal
+      split: train
+      columns: [conversations]
+      formatter: sharegpt
+      num_samples: 35
+
+    # Diverse community RP - varied difficulty
+    - dataset: PygmalionAI/PIPPA
+      split: train
+      columns: [bot_name, conversation]
+      formatter: sharegpt
+      num_samples: 20
+
+
+    # ================================================
+    # Dialogue & Character Voice — 102 samples (20%)
+    # Complex dialogue with character depth
+    # ================================================
+    
+    - dataset: cornell-movie-dialog/cornell_movie_dialog
+      split: train
+      columns: [line_text, character]
+      formatter: chat_completion
+      num_samples: 40
+
+    - dataset: ConvLab/dailydialog
+      split: train
+      columns: [dialogues]
+      formatter: chat_completion
+      num_samples: 32
+
+    - dataset: awsaf49/persona-chat
+      split: train
+      columns: [persona, conversation]
+      formatter: chat_completion
+      num_samples: 30
+
+
+    # ================================================
+    # World-building & Scenarios — 77 samples (15%)
+    # Rich worldbuilding for challenging RP
+    # ================================================
+    
+    - dataset: anthracite-org/nopm_claude_writing_fixed
+      split: train
+      columns: [conversations]
+      formatter: sharegpt
+      num_samples: 35
+
+    - dataset: PocketDoc/Dans-Prosemaxx-Adventure
+      split: train
+      columns: [conversations]
+      formatter: sharegpt
+      num_samples: 25
+
+    - dataset: Gryphe/Opus-WritingPrompts
+      split: train
+      columns: [conversations]
+      formatter: sharegpt
+      num_samples: 17
+
+
+    # ================================================
+    # Narrative Fiction Support — 51 samples (10%)
+    # Complex fiction for challenging RP context
+    # ================================================
+    
+    - dataset: sam-paech/gutenberg3-generalfiction-scifi-fantasy-romance-adventure-dpo
+      split: train
+      columns: [chosen]
+      formatter: chat_completion
+      num_samples: 30
+
+    - dataset: euclaise/writingprompts
+      split: train
+      columns: [prompt, story]
+      formatter: prompt_answer
+      num_samples: 21
+
+
+    # ================================================
+    # Genre-specific Scenarios — 41 samples (8%)
+    # Diverse challenging genre scenarios
+    # ================================================
+    
+    - dataset: Gryphe/ChatGPT-4o-Writing-Prompts
+      split: train
+      columns: [prompt, story]
+      formatter: prompt_answer
+      num_samples: 25
+
+    - dataset: fabraz/writingPromptAug
+      split: train
+      columns: [prompt, story]
+      formatter: prompt_answer
+      num_samples: 16
+
+
+    # ================================================
+    # General Conversation — 26 samples (5%)
+    # Baseline conversational ability
+    # ================================================
+    
+    - dataset: HuggingFaceH4/ultrachat_200k
+      split: train_sft
+      columns: [messages]
+      formatter: chat_completion
+      num_samples: 16
+
+    - dataset: databricks/databricks-dolly-15k
+      split: train
+      columns: [instruction, response]
+      formatter: prompt_answer
+      num_samples: 10
+
+
+    # ================================================
+    # Adventure / Interactive Fiction — 24 samples (5%)
+    # Challenging interactive RP scenarios
+    # ================================================
+    
+    - dataset: PocketDoc/Dans-Kinomaxx-VanillaBackrooms
+      split: train
+      columns: [conversations]
+      formatter: sharegpt
+      num_samples: 14
+
+    - dataset: zerofata/Roleplay-Anime-Characters
+      split: train
+      columns: [messages]
+      formatter: chat_completion
+      num_samples: 10
+
+
+    # ================================================
+    # General Capability Preservation — 18 samples (3.5%)
+    # Math, reasoning - prevents capability loss
+    # ================================================
+    
+    - dataset: nvidia/HelpSteer
+      split: train
+      columns: [prompt, response]
+      formatter: prompt_answer
+      num_samples: 8
+
+    - dataset: garage-bAInd/Open-Platypus
+      split: train
+      columns: [instruction, output]
+      formatter: prompt_answer
+      num_samples: 6
+
+    - dataset: nvidia/OpenMathInstruct-2
+      split: train
+      columns: [problem, generated_solution]
+      formatter: prompt_answer
+      num_samples: 4
+      streaming: true
+
+
+    # ================================================
+    # Multilingual — 8 samples (1.5%)
+    # Multilingual RP challenges
+    # ================================================
+    
+    - dataset: HuggingFaceH4/Multilingual-Thinking
+      split: train
+      columns: [user]
+      formatter: raw_text
+      num_samples: 8

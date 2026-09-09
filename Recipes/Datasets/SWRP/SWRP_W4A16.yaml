@@ -1,0 +1,259 @@
+calibration_set:
+  _templates:
+    - role: system
+      prompt: ""
+      completion: ""
+
+  # =====================================================
+  # SWRP W4A16 INT4 WEIGHT QUANTIZATION OPTIMIZED
+  # =====================================================
+  # Dual-purpose SW+RP calibration for INT4 quantization
+  # Based on official llm-compressor guidance:
+  # - 512 samples recommended
+  # - 2048 sequence length optimal for weight-only quant
+  # =====================================================
+  
+  max_seq_length: 2048
+  shuffle: true
+  seed: 42
+
+  # =====================================================
+  # Category Summary (Total: 512 samples)
+  # Balanced blend optimized for SW+RP INT4 quantization
+  # =====================================================
+  # Narrative Fiction (102 samples - 20%)        [SHARED PRIORITY]
+  # Roleplay / Character Cards (102 samples - 20%) [RP PRIORITY]
+  # Dialogue & Character Voice (92 samples - 18%) [SHARED PRIORITY]
+  # World-building & Scenarios (61 samples - 12%) [SHARED PRIORITY]
+  # Genre-specific Prompts (51 samples - 10%)    [SHARED]
+  # Adventure / Interactive (26 samples - 5%)    [RP FOCUS]
+  # Poetry & Prose Rhythm (15 samples - 3%)      [SW FOCUS]
+  # Creative Nonfiction (15 samples - 3%)        [SW FOCUS]
+  # General Conversation (15 samples - 3%)       [BASELINE]
+  # General Capability Preservation (21 samples - 4%) [CRITICAL]
+  # Multilingual (12 samples - 2%)               [BREADTH]
+  # =====================================================
+
+  datasets:
+
+    # ================================================
+    # Narrative Fiction — 102 samples (20%)
+    # High-quality writing for INT4 weight calibration
+    # ================================================
+    
+    - dataset: Gryphe/Opus-WritingPrompts
+      split: train
+      columns: [conversations]
+      formatter: sharegpt
+      num_samples: 40
+
+    - dataset: euclaise/writingprompts
+      split: train
+      columns: [prompt, story]
+      formatter: prompt_answer
+      num_samples: 35
+
+    - dataset: sam-paech/gutenberg3-generalfiction-scifi-fantasy-romance-adventure-dpo
+      split: train
+      columns: [chosen]
+      formatter: chat_completion
+      num_samples: 27
+
+
+    # ================================================
+    # Roleplay / Character Cards — 102 samples (20%)
+    # Character-based RP for INT4 calibration
+    # ================================================
+    
+    - dataset: Gryphe/Sonnet3.5-Charcard-Roleplay
+      split: train
+      columns: [conversation]
+      formatter: sharegpt
+      num_samples: 40
+
+    - dataset: anthracite-org/stheno-filtered-v1.1
+      split: train
+      columns: [conversations]
+      formatter: sharegpt
+      num_samples: 32
+
+    - dataset: anthracite-org/kalo-opus-instruct-22k-no-refusal
+      split: train
+      columns: [conversations]
+      formatter: sharegpt
+      num_samples: 20
+
+    - dataset: PygmalionAI/PIPPA
+      split: train
+      columns: [bot_name, conversation]
+      formatter: sharegpt
+      num_samples: 10
+
+
+    # ================================================
+    # Dialogue & Character Voice — 92 samples (18%)
+    # Dialogue patterns for weight sensitivity
+    # ================================================
+    
+    - dataset: cornell-movie-dialog/cornell_movie_dialog
+      split: train
+      columns: [line_text, character]
+      formatter: chat_completion
+      num_samples: 35
+
+    - dataset: ConvLab/dailydialog
+      split: train
+      columns: [dialogues]
+      formatter: chat_completion
+      num_samples: 30
+
+    - dataset: awsaf49/persona-chat
+      split: train
+      columns: [persona, conversation]
+      formatter: chat_completion
+      num_samples: 27
+
+
+    # ================================================
+    # World-building & Scenarios — 61 samples (12%)
+    # Scene-setting for SW+RP weight calibration
+    # ================================================
+    
+    - dataset: anthracite-org/nopm_claude_writing_fixed
+      split: train
+      columns: [conversations]
+      formatter: sharegpt
+      num_samples: 30
+
+    - dataset: PocketDoc/Dans-Prosemaxx-Adventure
+      split: train
+      columns: [conversations]
+      formatter: sharegpt
+      num_samples: 31
+
+
+    # ================================================
+    # Genre-specific Prompts — 51 samples (10%)
+    # Genre variety for robust INT4 quantization
+    # ================================================
+    
+    - dataset: Gryphe/ChatGPT-4o-Writing-Prompts
+      split: train
+      columns: [prompt, story]
+      formatter: prompt_answer
+      num_samples: 30
+
+    - dataset: fabraz/writingPromptAug
+      split: train
+      columns: [prompt, story]
+      formatter: prompt_answer
+      num_samples: 21
+
+
+    # ================================================
+    # Adventure / Interactive Fiction — 26 samples (5%)
+    # Interactive content for weight calibration
+    # ================================================
+    
+    - dataset: PocketDoc/Dans-Kinomaxx-VanillaBackrooms
+      split: train
+      columns: [conversations]
+      formatter: sharegpt
+      num_samples: 16
+
+    - dataset: zerofata/Roleplay-Anime-Characters
+      split: train
+      columns: [messages]
+      formatter: chat_completion
+      num_samples: 10
+
+
+    # ================================================
+    # Poetry & Prose Rhythm — 15 samples (3%)
+    # Literary devices for prose quality
+    # ================================================
+    
+    - dataset: merve/poetry
+      split: train
+      columns: [content]
+      formatter: raw_text
+      num_samples: 10
+
+    - dataset: Abirate/english_quotes
+      split: train
+      columns: [quote]
+      formatter: raw_text
+      num_samples: 5
+
+
+    # ================================================
+    # Creative Nonfiction — 15 samples (3%)
+    # Essays for prose depth
+    # ================================================
+    
+    - dataset: iamketan25/essay-instructions-dataset
+      split: train
+      columns: [instruction, essay]
+      formatter: prompt_answer
+      num_samples: 10
+
+    - dataset: nid989/EssayForum-Dataset
+      split: train
+      columns: [prompt, essay]
+      formatter: prompt_answer
+      num_samples: 5
+
+
+    # ================================================
+    # General Conversation — 15 samples (3%)
+    # Baseline conversational ability for INT4
+    # ================================================
+    
+    - dataset: HuggingFaceH4/ultrachat_200k
+      split: train_sft
+      columns: [messages]
+      formatter: chat_completion
+      num_samples: 10
+
+    - dataset: databricks/databricks-dolly-15k
+      split: train
+      columns: [instruction, response]
+      formatter: prompt_answer
+      num_samples: 5
+
+
+    # ================================================
+    # General Capability Preservation — 21 samples (4%)
+    # CRITICAL: Prevents capability collapse in INT4
+    # ================================================
+    
+    - dataset: nvidia/HelpSteer
+      split: train
+      columns: [prompt, response]
+      formatter: prompt_answer
+      num_samples: 9
+
+    - dataset: garage-bAInd/Open-Platypus
+      split: train
+      columns: [instruction, output]
+      formatter: prompt_answer
+      num_samples: 7
+
+    - dataset: nvidia/OpenMathInstruct-2
+      split: train
+      columns: [problem, generated_solution]
+      formatter: prompt_answer
+      num_samples: 5
+      streaming: true
+
+
+    # ================================================
+    # Multilingual — 12 samples (2%)
+    # Language breadth for quantization robustness
+    # ================================================
+    
+    - dataset: HuggingFaceH4/Multilingual-Thinking
+      split: train
+      columns: [user]
+      formatter: raw_text
+      num_samples: 12

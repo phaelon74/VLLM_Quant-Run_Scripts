@@ -1,0 +1,193 @@
+calibration_set:
+  _templates:
+    - role: system
+      prompt: ""
+      completion: ""
+
+  # Short context for quick calibration or memory-constrained scenarios
+  max_seq_length: 2048
+  shuffle: true
+  seed: 42
+
+  # =====================================================
+  # Category Summary (Total: 512 samples)
+  # Optimized for shorter sequences - uses concise datasets
+  # =====================================================
+  # Narrative Fiction (128 samples - 25%)
+  # Dialogue & Character Voice (77 samples - 15%)
+  # Genre-specific Prompts (77 samples - 15%)
+  # World-building & Description (51 samples - 10%)
+  # Roleplay / Improvisation (41 samples - 8%)
+  # Creative Nonfiction (36 samples - 7%)
+  # Instruction & Writing Craft (26 samples - 5%)
+  # General Chat (15 samples - 3%)
+  # General Capability Preservation (26 samples - 5%)
+  # Multilingual Creative (10 samples - 2%)
+  # Poetry removed - fits in other categories at 2k
+  # =====================================================
+
+  datasets:
+
+    # ================================================
+    # Narrative Fiction — 128 samples (25%)
+    # Short/concise stories suitable for 2k context
+    # ================================================
+    - dataset: SimpleStories/SimpleStories
+      split: train
+      columns: [story]
+      formatter: raw_text
+      num_samples: 50
+
+    - dataset: euclaise/writingprompts
+      split: train
+      columns: [prompt, story]
+      formatter: prompt_answer
+      num_samples: 45
+
+    - dataset: mintujupally/ROCStories
+      split: train
+      columns: [story]
+      formatter: raw_text
+      num_samples: 33
+
+
+    # ================================================
+    # Dialogue & Character Voice — 77 samples (15%)
+    # Short dialogue exchanges
+    # ================================================
+    - dataset: ConvLab/dailydialog
+      split: train
+      columns: [dialogues]
+      formatter: chat_completion
+      num_samples: 40
+
+    - dataset: awsaf49/persona-chat
+      split: train
+      columns: [persona, conversation]
+      formatter: chat_completion
+      num_samples: 37
+
+
+    # ================================================
+    # Genre-specific Prompts — 77 samples (15%)
+    # Short genre pieces
+    # ================================================
+    - dataset: Gryphe/ChatGPT-4o-Writing-Prompts
+      split: train
+      columns: [prompt, story]
+      formatter: prompt_answer
+      num_samples: 45
+
+    - dataset: fabraz/writingPromptAug
+      split: train
+      columns: [prompt, story]
+      formatter: prompt_answer
+      num_samples: 32
+
+
+    # ================================================
+    # World-building & Description — 51 samples (10%)
+    # Concise descriptive passages
+    # ================================================
+    - dataset: Gryphe/Opus-WritingPrompts
+      split: train
+      columns: [conversations]
+      formatter: sharegpt
+      num_samples: 30
+
+    - dataset: PocketDoc/Dans-Prosemaxx-Adventure
+      split: train
+      columns: [conversations]
+      formatter: sharegpt
+      num_samples: 21
+
+
+    # ================================================
+    # Roleplay / Improvisation — 41 samples (8%)
+    # Short roleplay scenarios
+    # ================================================
+    - dataset: Gryphe/Sonnet3.5-Charcard-Roleplay
+      split: train
+      columns: [conversation]
+      formatter: sharegpt
+      num_samples: 25
+
+    - dataset: anthracite-org/stheno-filtered-v1.1
+      split: train
+      columns: [conversations]
+      formatter: sharegpt
+      num_samples: 16
+
+
+    # ================================================
+    # Creative Nonfiction — 36 samples (7%)
+    # Short essays, reflections
+    # ================================================
+    - dataset: iamketan25/essay-instructions-dataset
+      split: train
+      columns: [instruction, essay]
+      formatter: prompt_answer
+      num_samples: 20
+
+    - dataset: nid989/EssayForum-Dataset
+      split: train
+      columns: [prompt, essay]
+      formatter: prompt_answer
+      num_samples: 16
+
+
+    # ================================================
+    # Instruction & Writing Craft — 26 samples (5%)
+    # Short instruction-response pairs
+    # ================================================
+    - dataset: databricks/databricks-dolly-15k
+      split: train
+      columns: [instruction, response]
+      formatter: prompt_answer
+      num_samples: 26
+
+
+    # ================================================
+    # General Chat — 15 samples (3%)
+    # Brief conversational exchanges
+    # ================================================
+    - dataset: HuggingFaceH4/ultrachat_200k
+      split: train_sft
+      columns: [messages]
+      formatter: chat_completion
+      num_samples: 15
+
+
+    # ================================================
+    # General Capability Preservation — 26 samples (5%)
+    # Math, reasoning - prevents capability loss
+    # ================================================
+    - dataset: nvidia/HelpSteer
+      split: train
+      columns: [prompt, response]
+      formatter: prompt_answer
+      num_samples: 10
+
+    - dataset: nvidia/OpenMathInstruct-2
+      split: train
+      columns: [problem, generated_solution]
+      formatter: prompt_answer
+      num_samples: 8
+      streaming: true
+
+    - dataset: garage-bAInd/Open-Platypus
+      split: train
+      columns: [instruction, output]
+      formatter: prompt_answer
+      num_samples: 8
+
+
+    # ================================================
+    # Multilingual Creative — 10 samples (2%)
+    # Brief multilingual creative content
+    # ================================================
+    - dataset: HuggingFaceH4/Multilingual-Thinking
+      split: train
+      columns: [user]
+      formatter: raw_text
+      num_samples: 10

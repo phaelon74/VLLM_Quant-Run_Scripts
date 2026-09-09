@@ -1,0 +1,225 @@
+calibration_set:
+  _templates:
+    - role: system
+      prompt: ""
+      completion: ""
+
+  # =====================================================
+  # SWRP SCREENPLAY - DIALOGUE & SCENE FOCUSED
+  # Dual-purpose SW+RP with heavy dialogue/screenplay emphasis
+  # Optimized for theatrical/cinematic writing and RP
+  # =====================================================
+  
+  max_seq_length: 4096
+  shuffle: true
+  seed: 42
+
+  # =====================================================
+  # Category Summary (Total: 512 samples)
+  # Heavy dialogue/screenplay focus for SW+RP
+  # =====================================================
+  # Screenplay & Movie Scripts (120 samples - 23%)  [SCREENPLAY FOCUS]
+  # Narrative Fiction (77 samples - 15%)           [SW PRIORITY]
+  # Roleplay / Character Cards (82 samples - 16%)  [RP PRIORITY]
+  # Dialogue & Character Voice (100 samples - 20%) [SHARED PRIORITY]
+  # World-building & Scenarios (51 samples - 10%)  [SHARED]
+  # Adventure / Interactive (26 samples - 5%)      [RP FOCUS]
+  # Poetry & Prose Rhythm (10 samples - 2%)        [SW FOCUS]
+  # General Conversation (15 samples - 3%)         [BASELINE]
+  # General Capability Preservation (21 samples - 4%) [CRITICAL]
+  # Multilingual (10 samples - 2%)                 [BREADTH]
+  # =====================================================
+
+  datasets:
+
+    # ================================================
+    # Screenplay & Movie Scripts — 120 samples (23%)
+    # Core screenplay/dialogue for theatrical SW+RP
+    # ================================================
+    
+    - dataset: cornell-movie-dialog/cornell_movie_dialog
+      split: train
+      columns: [line_text, character, movie_title]
+      formatter: chat_completion
+      num_samples: 60
+
+    - dataset: IsmaelMousa/movies
+      split: train
+      columns: [Script, Name]
+      formatter: raw_text
+      num_samples: 35
+
+    - dataset: mocboch/movie_scripts
+      split: train
+      columns: [script, title]
+      formatter: raw_text
+      num_samples: 25
+
+
+    # ================================================
+    # Narrative Fiction — 77 samples (15%)
+    # Story structure supporting screenplay
+    # ================================================
+    
+    - dataset: Gryphe/Opus-WritingPrompts
+      split: train
+      columns: [conversations]
+      formatter: sharegpt
+      num_samples: 40
+
+    - dataset: euclaise/writingprompts
+      split: train
+      columns: [prompt, story]
+      formatter: prompt_answer
+      num_samples: 37
+
+
+    # ================================================
+    # Roleplay / Character Cards — 82 samples (16%)
+    # Character-based RP with dialogue focus
+    # ================================================
+    
+    - dataset: Gryphe/Sonnet3.5-Charcard-Roleplay
+      split: train
+      columns: [conversation]
+      formatter: sharegpt
+      num_samples: 35
+
+    - dataset: anthracite-org/stheno-filtered-v1.1
+      split: train
+      columns: [conversations]
+      formatter: sharegpt
+      num_samples: 27
+
+    - dataset: anthracite-org/kalo-opus-instruct-22k-no-refusal
+      split: train
+      columns: [conversations]
+      formatter: sharegpt
+      num_samples: 20
+
+
+    # ================================================
+    # Dialogue & Character Voice — 100 samples (20%)
+    # Extended dialogue with character authenticity
+    # ================================================
+    
+    - dataset: ConvLab/dailydialog
+      split: train
+      columns: [dialogues]
+      formatter: chat_completion
+      num_samples: 50
+
+    - dataset: awsaf49/persona-chat
+      split: train
+      columns: [persona, conversation]
+      formatter: chat_completion
+      num_samples: 50
+
+
+    # ================================================
+    # World-building & Scenarios — 51 samples (10%)
+    # Scene-setting and scenario development
+    # ================================================
+    
+    - dataset: anthracite-org/nopm_claude_writing_fixed
+      split: train
+      columns: [conversations]
+      formatter: sharegpt
+      num_samples: 30
+
+    - dataset: PocketDoc/Dans-Prosemaxx-Adventure
+      split: train
+      columns: [conversations]
+      formatter: sharegpt
+      num_samples: 21
+
+
+    # ================================================
+    # Adventure / Interactive — 26 samples (5%)
+    # Interactive theatrical scenarios
+    # ================================================
+    
+    - dataset: PocketDoc/Dans-Kinomaxx-VanillaBackrooms
+      split: train
+      columns: [conversations]
+      formatter: sharegpt
+      num_samples: 16
+
+    - dataset: zerofata/Roleplay-Anime-Characters
+      split: train
+      columns: [messages]
+      formatter: chat_completion
+      num_samples: 10
+
+
+    # ================================================
+    # Poetry & Prose Rhythm — 10 samples (2%)
+    # Literary dialogue rhythm
+    # ================================================
+    
+    - dataset: merve/poetry
+      split: train
+      columns: [content]
+      formatter: raw_text
+      num_samples: 6
+
+    - dataset: Abirate/english_quotes
+      split: train
+      columns: [quote]
+      formatter: raw_text
+      num_samples: 4
+
+
+    # ================================================
+    # General Conversation — 15 samples (3%)
+    # Baseline conversational ability
+    # ================================================
+    
+    - dataset: HuggingFaceH4/ultrachat_200k
+      split: train_sft
+      columns: [messages]
+      formatter: chat_completion
+      num_samples: 10
+
+    - dataset: databricks/databricks-dolly-15k
+      split: train
+      columns: [instruction, response]
+      formatter: prompt_answer
+      num_samples: 5
+
+
+    # ================================================
+    # General Capability Preservation — 21 samples (4%)
+    # Math, reasoning - prevents capability loss
+    # ================================================
+    
+    - dataset: nvidia/HelpSteer
+      split: train
+      columns: [prompt, response]
+      formatter: prompt_answer
+      num_samples: 9
+
+    - dataset: garage-bAInd/Open-Platypus
+      split: train
+      columns: [instruction, output]
+      formatter: prompt_answer
+      num_samples: 7
+
+    - dataset: nvidia/OpenMathInstruct-2
+      split: train
+      columns: [problem, generated_solution]
+      formatter: prompt_answer
+      num_samples: 5
+      streaming: true
+
+
+    # ================================================
+    # Multilingual — 10 samples (2%)
+    # Multilingual dialogue
+    # ================================================
+    
+    - dataset: HuggingFaceH4/Multilingual-Thinking
+      split: train
+      columns: [user]
+      formatter: raw_text
+      num_samples: 10

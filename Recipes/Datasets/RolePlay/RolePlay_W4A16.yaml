@@ -1,0 +1,221 @@
+calibration_set:
+  _templates:
+    - role: system
+      prompt: ""
+      completion: ""
+
+  # =====================================================
+  # ROLEPLAY W4A16 INT4 WEIGHT QUANTIZATION OPTIMIZED
+  # =====================================================
+  # Based on official llm-compressor guidance:
+  # - 512 samples recommended
+  # - 2048 sequence length optimal for weight-only quant
+  # - Roleplay-focused for character RP models
+  # =====================================================
+  
+  max_seq_length: 2048
+  shuffle: true
+  seed: 42
+
+  # =====================================================
+  # Category Summary (Total: 512 samples)
+  # =====================================================
+  # Roleplay / Character Cards (165 samples - 32%)  [PRIMARY]
+  # Dialogue & Character Voice (102 samples - 20%)
+  # World-building & Scenarios (77 samples - 15%)
+  # Narrative Fiction Support (51 samples - 10%)
+  # Genre-specific Scenarios (41 samples - 8%)
+  # General Conversation (26 samples - 5%)
+  # Adventure / Interactive (24 samples - 5%)
+  # General Capability Preservation (18 samples - 3.5%)
+  # Multilingual (8 samples - 1.5%)
+  # =====================================================
+
+  datasets:
+
+    # ================================================
+    # Roleplay / Character Cards — 165 samples (32%)
+    # PRIMARY: Character-based RP for INT4 calibration
+    # High-quality synthetic RP data essential for quant
+    # ================================================
+    
+    - dataset: Gryphe/Sonnet3.5-Charcard-Roleplay
+      split: train
+      columns: [conversation]
+      formatter: sharegpt
+      num_samples: 60
+
+    - dataset: anthracite-org/stheno-filtered-v1.1
+      split: train
+      columns: [conversations]
+      formatter: sharegpt
+      num_samples: 50
+
+    - dataset: anthracite-org/kalo-opus-instruct-22k-no-refusal
+      split: train
+      columns: [conversations]
+      formatter: sharegpt
+      num_samples: 35
+
+    - dataset: PygmalionAI/PIPPA
+      split: train
+      columns: [bot_name, conversation]
+      formatter: sharegpt
+      num_samples: 20
+
+
+    # ================================================
+    # Dialogue & Character Voice — 102 samples (20%)
+    # Dialogue patterns for weight sensitivity
+    # ================================================
+    
+    - dataset: cornell-movie-dialog/cornell_movie_dialog
+      split: train
+      columns: [line_text, character]
+      formatter: chat_completion
+      num_samples: 40
+
+    - dataset: ConvLab/dailydialog
+      split: train
+      columns: [dialogues]
+      formatter: chat_completion
+      num_samples: 32
+
+    - dataset: awsaf49/persona-chat
+      split: train
+      columns: [persona, conversation]
+      formatter: chat_completion
+      num_samples: 30
+
+
+    # ================================================
+    # World-building & Scenarios — 77 samples (15%)
+    # Scene-setting for RP weight calibration
+    # ================================================
+    
+    - dataset: anthracite-org/nopm_claude_writing_fixed
+      split: train
+      columns: [conversations]
+      formatter: sharegpt
+      num_samples: 35
+
+    - dataset: PocketDoc/Dans-Prosemaxx-Adventure
+      split: train
+      columns: [conversations]
+      formatter: sharegpt
+      num_samples: 25
+
+    - dataset: Gryphe/Opus-WritingPrompts
+      split: train
+      columns: [conversations]
+      formatter: sharegpt
+      num_samples: 17
+
+
+    # ================================================
+    # Narrative Fiction Support — 51 samples (10%)
+    # Supporting fiction for RP context
+    # ================================================
+    
+    - dataset: sam-paech/gutenberg3-generalfiction-scifi-fantasy-romance-adventure-dpo
+      split: train
+      columns: [chosen]
+      formatter: chat_completion
+      num_samples: 30
+
+    - dataset: euclaise/writingprompts
+      split: train
+      columns: [prompt, story]
+      formatter: prompt_answer
+      num_samples: 21
+
+
+    # ================================================
+    # Genre-specific Scenarios — 41 samples (8%)
+    # Genre variety for robust INT4 quantization
+    # ================================================
+    
+    - dataset: Gryphe/ChatGPT-4o-Writing-Prompts
+      split: train
+      columns: [prompt, story]
+      formatter: prompt_answer
+      num_samples: 25
+
+    - dataset: fabraz/writingPromptAug
+      split: train
+      columns: [prompt, story]
+      formatter: prompt_answer
+      num_samples: 16
+
+
+    # ================================================
+    # General Conversation — 26 samples (5%)
+    # Baseline conversational ability for INT4
+    # ================================================
+    
+    - dataset: HuggingFaceH4/ultrachat_200k
+      split: train_sft
+      columns: [messages]
+      formatter: chat_completion
+      num_samples: 16
+
+    - dataset: databricks/databricks-dolly-15k
+      split: train
+      columns: [instruction, response]
+      formatter: prompt_answer
+      num_samples: 10
+
+
+    # ================================================
+    # Adventure / Interactive Fiction — 24 samples (5%)
+    # Interactive RP for weight calibration
+    # ================================================
+    
+    - dataset: PocketDoc/Dans-Kinomaxx-VanillaBackrooms
+      split: train
+      columns: [conversations]
+      formatter: sharegpt
+      num_samples: 14
+
+    - dataset: zerofata/Roleplay-Anime-Characters
+      split: train
+      columns: [messages]
+      formatter: chat_completion
+      num_samples: 10
+
+
+    # ================================================
+    # General Capability Preservation — 18 samples (3.5%)
+    # CRITICAL: Prevents capability collapse in INT4
+    # ================================================
+    
+    - dataset: nvidia/HelpSteer
+      split: train
+      columns: [prompt, response]
+      formatter: prompt_answer
+      num_samples: 8
+
+    - dataset: garage-bAInd/Open-Platypus
+      split: train
+      columns: [instruction, output]
+      formatter: prompt_answer
+      num_samples: 6
+
+    - dataset: nvidia/OpenMathInstruct-2
+      split: train
+      columns: [problem, generated_solution]
+      formatter: prompt_answer
+      num_samples: 4
+      streaming: true
+
+
+    # ================================================
+    # Multilingual — 8 samples (1.5%)
+    # Language breadth for quantization robustness
+    # ================================================
+    
+    - dataset: HuggingFaceH4/Multilingual-Thinking
+      split: train
+      columns: [user]
+      formatter: raw_text
+      num_samples: 8
